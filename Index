@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Meia Maratona 21km — Plano de Treinos</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --pink: #C2185B;
+  --pink-light: #FCE4EC;
+  --pink-mid: #F48FB1;
+  --pink-dark: #880E4F;
+  --rose: #E91E8C;
+  --green: #2E7D32;
+  --green-light: #E8F5E9;
+  --blue: #1565C0;
+  --blue-light: #E3F2FD;
+  --amber: #E65100;
+  --amber-light: #FFF3E0;
+  --purple: #6A1B9A;
+  --purple-light: #F3E5F5;
+  --teal: #00695C;
+  --teal-light: #E0F2F1;
+  --gray: #424242;
+  --gray-light: #F5F5F5;
+  --white: #ffffff;
+  --bg: #FFF8FB;
+  --surface: #ffffff;
+  --border: #F0D6E4;
+  --text: #1a1a1a;
+  --text-muted: #6B6B6B;
+  --text-faint: #AEAEAE;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 2px 12px rgba(194,24,91,0.08);
+  --shadow-md: 0 4px 24px rgba(194,24,91,0.12);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* ── LAYOUT ── */
+.sidebar {
+  position: fixed; left: 0; top: 0; bottom: 0; width: 240px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  z-index: 100;
+  box-shadow: var(--shadow);
+}
+
+.main {
+  margin-left: 240px;
+  min-height: 100vh;
+  padding: 2rem 2.5rem;
+  max-width: calc(100vw - 240px);
+}
+
+/* ── SIDEBAR ── */
+.sidebar-logo {
+  padding: 1.75rem 1.5rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-logo-icon {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: linear-gradient(135deg, #FCE4EC, #F48FB1);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; margin-bottom: 10px;
+}
+.sidebar-logo-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 17px; color: var(--pink-dark); line-height: 1.2;
+}
+.sidebar-logo-sub {
+  font-size: 11px; color: var(--text-muted); margin-top: 3px;
+}
+.race-countdown {
+  margin: 1rem 1.5rem;
+  background: var(--pink-light);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+}
+.race-countdown-label { font-size: 10px; color: var(--pink); text-transform: uppercase; letter-spacing: .06em; font-weight: 500; }
+.race-countdown-val { font-size: 22px; font-weight: 600; color: var(--pink-dark); line-height: 1.2; }
+.race-countdown-sub { font-size: 10px; color: var(--pink); }
+
+.nav { padding: .5rem .75rem; flex: 1; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: var(--radius-sm);
+  cursor: pointer; font-size: 13px; color: var(--text-muted);
+  transition: all .15s; margin-bottom: 2px; border: none;
+  background: transparent; width: 100%; text-align: left;
+}
+.nav-item:hover { background: var(--pink-light); color: var(--pink-dark); }
+.nav-item.active { background: var(--pink-light); color: var(--pink-dark); font-weight: 500; }
+.nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+
+.sidebar-bottom {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border);
+}
+.strava-connect-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 10px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid #FC4C02;
+  background: transparent; color: #FC4C02;
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  transition: all .15s; font-family: 'DM Sans', sans-serif;
+}
+.strava-connect-btn:hover { background: #FFF5F0; }
+.strava-connect-btn.connected { border-color: var(--green); color: var(--green); background: var(--green-light); }
+
+/* ── SECTIONS ── */
+.section { display: none; }
+.section.active { display: block; }
+
+.page-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 28px; color: var(--pink-dark);
+  margin-bottom: .25rem;
+}
+.page-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 2rem; }
+
+/* ── CARDS ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+}
+.card + .card { margin-top: 1rem; }
+
+.metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 1.5rem; }
+.metric-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  box-shadow: var(--shadow);
+}
+.metric-label { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); margin-bottom: 6px; }
+.metric-value { font-size: 26px; font-weight: 600; color: var(--pink-dark); line-height: 1; }
+.metric-sub { font-size: 11px; color: var(--text-faint); margin-top: 4px; }
+
+/* ── PROGRESS ── */
+.prog-wrap { background: var(--pink-light); border-radius: 99px; height: 8px; overflow: hidden; margin: 8px 0; }
+.prog-bar {
+  height: 100%; border-radius: 99px;
+  background: linear-gradient(90deg, var(--pink-mid), var(--pink));
+  transition: width .6s cubic-bezier(.4,0,.2,1);
+}
+.prog-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); }
+
+/* ── FASE PILLS ── */
+.fase-pill { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 99px; font-weight: 500; margin-bottom: 12px; }
+.fase-base { background: var(--green-light); color: var(--green); }
+.fase-volume { background: var(--blue-light); color: var(--blue); }
+.fase-especifica { background: var(--purple-light); color: var(--purple); }
+.fase-afunilamento { background: var(--amber-light); color: var(--amber); }
+.fase-prova { background: var(--pink-light); color: var(--pink-dark); }
+
+/* ── WEEK NAV ── */
+.week-nav { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; }
+.week-nav select {
+  flex: 1; padding: 9px 14px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--text); font-size: 13px; font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+}
+.week-nav select:focus { outline: none; border-color: var(--pink-mid); }
+.icon-btn {
+  width: 36px; height: 36px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: var(--surface);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: var(--text-muted); transition: all .15s;
+}
+.icon-btn:hover { border-color: var(--pink-mid); color: var(--pink); background: var(--pink-light); }
+
+/* ── TREINO ROW ── */
+.treino-item {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin-bottom: 10px;
+  background: var(--surface);
+  transition: box-shadow .15s;
+}
+.treino-item:hover { box-shadow: var(--shadow-md); }
+.treino-item.descanso { background: var(--gray-light); border-color: #E0E0E0; }
+.treino-item.prova { background: linear-gradient(135deg, #FCE4EC, #FFF8FB); border-color: var(--pink-mid); }
+
+.treino-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.treino-dia { font-size: 11px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; }
+.treino-tipo { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 8px; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+.chip {
+  font-size: 11px; padding: 3px 10px; border-radius: 99px;
+}
+.chip-km { background: #FCE4EC; color: #880E4F; }
+.chip-pace { background: #E0F2F1; color: #00695C; }
+.chip-time { background: #E3F2FD; color: #1565C0; }
+.chip-zona { background: #F3E5F5; color: #6A1B9A; }
+.treino-obs {
+  font-size: 12px; color: var(--text-muted);
+  padding-top: 8px; border-top: 1px solid var(--border);
+  font-style: italic;
+}
+
+/* ── UPLOAD ── */
+.upload-area {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 2.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all .2s;
+  margin-bottom: 1rem;
+}
+.upload-area:hover { border-color: var(--pink-mid); background: var(--pink-light); }
+.upload-icon { font-size: 36px; margin-bottom: 10px; }
+.upload-title { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+.upload-sub { font-size: 13px; color: var(--text-muted); }
+
+.strava-big-btn {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; padding: 14px;
+  border-radius: var(--radius-sm); border: none;
+  background: #FC4C02; color: white;
+  font-size: 15px; font-weight: 500; cursor: pointer;
+  transition: all .15s; font-family: 'DM Sans', sans-serif;
+  margin-bottom: .75rem;
+}
+.strava-big-btn:hover { background: #d93e00; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(252,76,2,.3); }
+
+.divider { text-align: center; font-size: 12px; color: var(--text-faint); margin: 14px 0; position: relative; }
+.divider::before, .divider::after {
+  content: ''; position: absolute; top: 50%; width: calc(50% - 30px);
+  height: 1px; background: var(--border);
+}
+.divider::before { left: 0; }
+.divider::after { right: 0; }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.form-group label { font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 5px; font-weight: 500; }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; padding: 9px 12px;
+  border-radius: var(--radius-sm); border: 1px solid var(--border);
+  background: var(--surface); color: var(--text);
+  font-size: 13px; font-family: 'DM Sans', sans-serif;
+  transition: border-color .15s;
+}
+.form-group input:focus, .form-group select:focus {
+  outline: none; border-color: var(--pink-mid);
+  box-shadow: 0 0 0 3px rgba(244,143,177,.2);
+}
+
+.btn-primary {
+  width: 100%; padding: 12px;
+  border-radius: var(--radius-sm); border: none;
+  background: var(--pink); color: white;
+  font-size: 14px; font-weight: 500; cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all .15s;
+}
+.btn-primary:hover { background: var(--pink-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(194,24,91,.25); }
+
+.registro-item {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--green-light); border-radius: var(--radius-sm);
+  padding: 10px 14px; margin-bottom: 8px;
+}
+.registro-check { font-size: 18px; }
+.registro-info { flex: 1; }
+.registro-name { font-size: 13px; font-weight: 500; color: var(--green); }
+.registro-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+/* ── RESUMO ── */
+.gap-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.gap-lbl { font-size: 13px; color: var(--text-muted); min-width: 90px; }
+.gap-bar-wrap { flex: 1; height: 8px; background: var(--pink-light); border-radius: 99px; position: relative; overflow: hidden; }
+.gap-bar-target { position: absolute; height: 100%; background: #F0D6E4; border-radius: 99px; width: 100%; }
+.gap-bar-real { position: absolute; height: 100%; border-radius: 99px; transition: width .5s; }
+.gap-over { background: linear-gradient(90deg, #81C784, #2E7D32); }
+.gap-under { background: linear-gradient(90deg, #F48FB1, #C2185B); }
+.gap-vals { font-size: 12px; color: var(--text-muted); min-width: 80px; text-align: right; }
+.gap-delta { font-size: 12px; font-weight: 500; min-width: 50px; text-align: right; }
+.delta-pos { color: var(--green); }
+.delta-neg { color: var(--pink); }
+
+.insight {
+  background: var(--pink-light);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  display: flex; gap: 10px;
+  border-left: 3px solid var(--pink-mid);
+}
+.insight-icon { font-size: 18px; flex-shrink: 0; }
+.insight-text { font-size: 13px; color: var(--pink-dark); line-height: 1.6; }
+
+/* ── STRAVA ACTIVITIES ── */
+.activity-item {
+  display: flex; align-items: center; gap: 14px;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 12px 16px; margin-bottom: 8px; background: var(--surface);
+  transition: box-shadow .15s;
+}
+.activity-item:hover { box-shadow: var(--shadow-md); }
+.activity-run-icon { font-size: 22px; color: #FC4C02; flex-shrink: 0; }
+.activity-info { flex: 1; min-width: 0; }
+.activity-name { font-size: 14px; font-weight: 500; color: var(--text); }
+.activity-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.match-pill { font-size: 10px; padding: 2px 8px; border-radius: 99px; background: var(--green-light); color: var(--green); font-weight: 500; display: inline-block; margin-top: 5px; }
+.no-match-pill { font-size: 10px; color: var(--text-faint); display: inline-block; margin-top: 5px; }
+.km-badge { font-size: 13px; font-weight: 600; color: var(--pink-dark); background: var(--pink-light); padding: 4px 10px; border-radius: 99px; }
+
+/* ── STRAVA AUTH ── */
+.auth-steps { margin: 1rem 0; }
+.auth-step { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.auth-step:last-child { border-bottom: none; }
+.step-num { width: 24px; height: 24px; border-radius: 50%; background: var(--pink-light); color: var(--pink-dark); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.step-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+.step-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.code-input-wrap { background: var(--gray-light); border-radius: var(--radius-sm); padding: 1rem; margin-top: 1rem; }
+.code-url { font-family: monospace; font-size: 11px; color: var(--text-muted); background: var(--surface); padding: 8px 10px; border-radius: 6px; margin: 8px 0; word-break: break-all; }
+.code-url strong { color: var(--pink-dark); }
+.inp-code {
+  width: 100%; padding: 10px 12px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--text); font-size: 13px; font-family: monospace;
+  margin-top: 6px;
+}
+.inp-code:focus { outline: none; border-color: var(--pink-mid); }
+.btns-row { display: flex; gap: 8px; margin-top: 10px; justify-content: flex-end; }
+.btn-sec {
+  padding: 9px 16px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: transparent;
+  color: var(--text-muted); font-size: 13px; cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+}
+.btn-pri {
+  padding: 9px 16px; border-radius: var(--radius-sm);
+  border: none; background: var(--pink); color: white;
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+}
+.btn-pri:hover { background: var(--pink-dark); }
+
+.alert { border-radius: var(--radius-sm); padding: 12px 16px; display: flex; align-items: flex-start; gap: 10px; margin-bottom: 1rem; font-size: 13px; }
+.alert-warn { background: #FFF3E0; color: #E65100; border-left: 3px solid #FB8C00; }
+.alert-success { background: var(--green-light); color: var(--green); border-left: 3px solid #4CAF50; }
+.alert-error { background: var(--pink-light); color: var(--pink-dark); border-left: 3px solid var(--pink-mid); }
+
+/* ── MOBILE ── */
+.hamburger { display: none; position: fixed; top: 1rem; left: 1rem; z-index: 200; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); width: 40px; height: 40px; cursor: pointer; align-items: center; justify-content: center; font-size: 18px; box-shadow: var(--shadow); }
+
+@media (max-width: 768px) {
+  .hamburger { display: flex; }
+  .sidebar { transform: translateX(-100%); transition: transform .25s; }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; padding: 5rem 1.25rem 2rem; max-width: 100vw; }
+  .metric-grid { grid-template-columns: repeat(2, 1fr); }
+  .form-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen" style="position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;align-items:center;justify-content:center;padding:1.5rem">
+  <div style="width:100%;max-width:400px">
+    <div style="text-align:center;margin-bottom:2rem">
+      <div style="font-size:48px;margin-bottom:12px">🏃‍♀️</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:26px;color:var(--pink-dark)">Meia Maratona 21km</div>
+      <div style="font-size:13px;color:var(--text-muted);margin-top:4px">Plano personalizado · 16 semanas</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;box-shadow:var(--shadow-md)">
+      <div id="login-tabs" style="display:flex;gap:0;margin-bottom:1.5rem;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden">
+        <button id="tab-login" onclick="switchTab('login')" style="flex:1;padding:9px;border:none;background:var(--pink);color:white;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif">Entrar</button>
+        <button id="tab-signup" onclick="switchTab('signup')" style="flex:1;padding:9px;border:none;background:transparent;color:var(--text-muted);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif">Criar conta</button>
+      </div>
+      <div id="login-msg" style="display:none;padding:10px 12px;border-radius:var(--radius-sm);font-size:13px;margin-bottom:12px"></div>
+      <div style="margin-bottom:12px">
+        <label style="font-size:12px;color:var(--text-muted);font-weight:500;display:block;margin-bottom:5px">Email</label>
+        <input id="auth-email" type="email" placeholder="seu@email.com" style="width:100%;padding:10px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif"/>
+      </div>
+      <div style="margin-bottom:1.25rem">
+        <label style="font-size:12px;color:var(--text-muted);font-weight:500;display:block;margin-bottom:5px">Senha</label>
+        <input id="auth-password" type="password" placeholder="Mínimo 6 caracteres" style="width:100%;padding:10px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif"/>
+      </div>
+      <button onclick="authAction()" style="width:100%;padding:12px;border-radius:var(--radius-sm);border:none;background:var(--pink);color:white;font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif" id="auth-btn">Entrar</button>
+    </div>
+  </div>
+</div>
+
+<button class="hamburger" onclick="toggleMenu()" aria-label="Menu">☰</button>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-icon">🏃‍♀️</div>
+    <div class="sidebar-logo-title">Meia Maratona<br>21km</div>
+    <div class="sidebar-logo-sub">Plano personalizado · 16 semanas</div>
+  </div>
+
+  <div class="race-countdown">
+    <div class="race-countdown-label">🏁 Prova</div>
+    <div class="race-countdown-val" id="dias-restantes">—</div>
+    <div class="race-countdown-sub">dias para novembro</div>
+  </div>
+
+  <nav class="nav">
+    <button class="nav-item active" onclick="showSection('progresso',this)">
+      <span class="nav-icon">📊</span> Progresso
+    </button>
+    <button class="nav-item" onclick="showSection('plano',this)">
+      <span class="nav-icon">📅</span> Plano de treinos
+    </button>
+    <button class="nav-item" onclick="showSection('upload',this)">
+      <span class="nav-icon">⬆️</span> Subir treino
+    </button>
+    <button class="nav-item" onclick="showSection('resumo',this)">
+      <span class="nav-icon">📈</span> Resumo semanal
+    </button>
+    <button class="nav-item" onclick="showSection('strava',this)">
+      <span class="nav-icon">🔗</span> Strava
+    </button>
+  </nav>
+
+  <div class="sidebar-bottom">
+    <div id="user-info" style="font-size:11px;color:var(--text-muted);margin-bottom:8px;display:none">
+      <span id="user-email-display"></span>
+      <button onclick="logout()" style="display:block;margin-top:4px;background:none;border:none;color:var(--pink);font-size:11px;cursor:pointer;padding:0;font-family:'DM Sans',sans-serif">Sair</button>
+    </div>
+    <button class="strava-connect-btn" id="sidebar-strava-btn" onclick="showSection('strava',document.querySelectorAll('.nav-item')[4])">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.172"/></svg>
+      <span id="sidebar-strava-label">Conectar Strava</span>
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- ── PROGRESSO ── -->
+  <section id="progresso" class="section active">
+    <div class="page-title">Olá, corredora! 💗</div>
+    <div class="page-sub">Aqui está o seu painel de treinos para a meia maratona de novembro.</div>
+
+    <div class="metric-grid">
+      <div class="metric-card">
+        <div class="metric-label">Semana</div>
+        <div class="metric-value" id="m-sem">1</div>
+        <div class="metric-sub">de 16 semanas</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Fase atual</div>
+        <div class="metric-value" style="font-size:14px;line-height:1.4" id="m-fase">Base Aeróbica</div>
+        <div class="metric-sub" id="m-fase-sub">Sem. 1–4</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Km esta semana</div>
+        <div class="metric-value" id="m-km">21</div>
+        <div class="metric-sub">planejados</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Treinos</div>
+        <div class="metric-value" id="m-treinos">3</div>
+        <div class="metric-sub">corridas + descanso</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:1rem">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+        <div>
+          <div style="font-size:15px;font-weight:500;color:var(--text)">Progresso do plano</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px" id="prog-label">Semana 1 de 16</div>
+        </div>
+        <div style="font-size:22px;font-weight:600;color:var(--pink)" id="prog-pct">6%</div>
+      </div>
+      <div class="prog-wrap"><div class="prog-bar" id="prog-bar" style="width:6%"></div></div>
+      <div class="prog-labels"><span>Início</span><span>🏁 Novembro</span></div>
+    </div>
+
+    <div class="card">
+      <div style="font-size:15px;font-weight:500;color:var(--text);margin-bottom:1rem">Esta semana — Semana 1</div>
+      <div id="mini-week-list"></div>
+    </div>
+  </section>
+
+  <!-- ── PLANO ── -->
+  <section id="plano" class="section">
+    <div class="page-title">Plano de treinos</div>
+    <div class="page-sub">16 semanas de preparação progressiva para a prova.</div>
+
+    <div class="week-nav">
+      <button class="icon-btn" onclick="navSem(-1)">‹</button>
+      <select id="sem-select" onchange="renderSem(+this.value)"></select>
+      <button class="icon-btn" onclick="navSem(1)">›</button>
+    </div>
+
+    <div id="fase-badge"></div>
+    <div id="treinos-list"></div>
+  </section>
+
+  <!-- ── UPLOAD ── -->
+  <section id="upload" class="section">
+    <div class="page-title">Subir treino</div>
+    <div class="page-sub">Registre seus resultados e acompanhe o progresso.</div>
+
+    <button class="strava-big-btn" onclick="showSection('strava',document.querySelectorAll('.nav-item')[4])">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.172"/></svg>
+      Importar do Strava
+    </button>
+
+    <div class="divider">ou registre manualmente</div>
+
+    <div class="card">
+      <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:1rem">✏️ Inserir treino manualmente</div>
+      <div class="form-group" style="margin-bottom:12px">
+        <label>Treino do plano</label>
+        <select id="sel-treino"></select>
+      </div>
+      <div class="form-grid">
+        <div class="form-group"><label>Distância (km)</label><input type="number" id="inp-km" placeholder="0.0" step="0.1"/></div>
+        <div class="form-group"><label>Tempo (min)</label><input type="number" id="inp-tempo" placeholder="0"/></div>
+        <div class="form-group"><label>Pace médio</label><input type="text" id="inp-pace" placeholder="6:30/km"/></div>
+      </div>
+      <div class="form-group" style="margin-bottom:12px">
+        <label>Como foi? (sensações, clima...)</label>
+        <input type="text" id="inp-obs" placeholder="Ex: treino pesado, calor, pernas cansadas..."/>
+      </div>
+      <button class="btn-primary" onclick="salvarTreino()">Salvar treino</button>
+    </div>
+
+    <div id="registros-wrap" style="margin-top:1.5rem"></div>
+  </section>
+
+  <!-- ── RESUMO ── -->
+  <section id="resumo" class="section">
+    <div class="page-title">Resumo semanal</div>
+    <div class="page-sub">Compare o que foi planejado com o que você realizou.</div>
+
+    <div class="week-nav">
+      <button class="icon-btn" onclick="navSemResumo(-1)">‹</button>
+      <select id="resumo-select" onchange="renderResumo(+this.value)"></select>
+      <button class="icon-btn" onclick="navSemResumo(1)">›</button>
+    </div>
+
+    <div id="resumo-content"></div>
+  </section>
+
+  <!-- ── STRAVA ── -->
+  <section id="strava" class="section">
+    <div class="page-title">Integração Strava</div>
+    <div class="page-sub">Conecte sua conta e importe corridas automaticamente.</div>
+
+    <!-- Não conectado -->
+    <div id="strava-disconnected">
+      <div class="alert alert-warn">
+        <span>⚠️</span>
+        <div>Após clicar em "Autorizar", o Strava vai redirecionar para uma página de erro (localhost) — isso é normal! Copie o <code>code=XXXX</code> da URL e cole abaixo.</div>
+      </div>
+
+      <div class="card">
+        <div style="font-size:15px;font-weight:500;margin-bottom:1rem">Conectar conta do Strava</div>
+        <div class="auth-steps">
+          <div class="auth-step">
+            <div class="step-num">1</div>
+            <div><div class="step-text">Clique no botão para abrir a autorização do Strava</div></div>
+          </div>
+          <div class="auth-step">
+            <div class="step-num">2</div>
+            <div>
+              <div class="step-text">Autorize e copie o código da URL de retorno</div>
+              <div class="step-sub">A URL vai ter <code>?code=XXXXXXXX</code> — copie só o valor</div>
+            </div>
+          </div>
+          <div class="auth-step">
+            <div class="step-num">3</div>
+            <div><div class="step-text">Cole o código abaixo e clique em Conectar</div></div>
+          </div>
+        </div>
+
+        <a href="https://www.strava.com/oauth/authorize?client_id=237245&redirect_uri=https://golden-cajeta-f09344.netlify.app&response_type=code&scope=read,activity:read_all" target="_blank">
+          <button class="strava-big-btn" style="margin-top:1rem">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.172"/></svg>
+            Autorizar no Strava
+          </button>
+        </a>
+
+        <div class="code-input-wrap">
+          <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:6px">Cole o código aqui:</div>
+          <div class="code-url">https://golden-cajeta-f09344.netlify.app/?state=&<strong>code=COLE_AQUI</strong>&scope=...</div>
+          <input class="inp-code" id="auth-code" placeholder="Cole o código aqui..."/>
+          <div class="btns-row">
+            <button class="btn-pri" onclick="trocarCodigo()">Conectar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conectando -->
+    <div id="strava-loading" style="display:none">
+      <div class="alert alert-warn"><span>⏳</span><div>Conectando com o Strava...</div></div>
+    </div>
+
+    <!-- Conectado -->
+    <div id="strava-connected" style="display:none">
+      <div class="alert alert-success">
+        <span>✅</span>
+        <div>
+          <strong>Strava conectado!</strong>
+          <div id="athlete-name" style="font-size:12px;margin-top:2px"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+          <div style="font-size:15px;font-weight:500">Suas corridas recentes</div>
+          <button class="btn-sec" onclick="buscarAtividades()" style="font-size:12px">↻ Atualizar</button>
+        </div>
+        <div id="activities-list"><div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:13px">Carregando...</div></div>
+      </div>
+
+      <div style="text-align:center;margin-top:1rem">
+        <button class="btn-sec" style="font-size:12px;color:var(--text-faint)" onclick="desconectar()">Desconectar Strava</button>
+      </div>
+    </div>
+
+    <!-- Erro -->
+    <div id="strava-error" style="display:none">
+      <div class="alert alert-error"><span>⚠️</span><div id="strava-error-msg"></div></div>
+      <button class="btn-sec" onclick="stravaState('disconnected')">Tentar novamente</button>
+    </div>
+  </section>
+
+</main>
+
+<script>
+// ════════════════════════════════════════════
+// DADOS DO PLANO
+// ════════════════════════════════════════════
+const PLANO = [
+  {sem:1,fase:"Base Aeróbica",treinos:[
+    {dia:"Terça",tipo:"🟢 Rodagem Leve",km:"5 km",pace:"6:40/km",tempo:"33 min",zona:"Z1-Z2",obs:"Respire confortavelmente. Não force."},
+    {dia:"Quinta",tipo:"🔵 Progressiva",km:"6 km",pace:"6:30→6:10/km",tempo:"38 min",zona:"Z2-Z3",obs:"Últimos 2km em ritmo mais forte"},
+    {dia:"Sábado",tipo:"🔴 Longão",km:"10 km",pace:"6:45/km",tempo:"1h07",zona:"Z2",obs:"Pace tranquilo, foco na distância"},
+    {dia:"Dom",tipo:"🟣 Descanso Ativo",km:"—",pace:"—",tempo:"30-40 min",zona:"Z1",obs:"Caminhada ou alongamento"},
+  ]},
+  {sem:2,fase:"Base Aeróbica",treinos:[
+    {dia:"Terça",tipo:"🟢 Rodagem Leve",km:"5 km",pace:"6:35/km",tempo:"33 min",zona:"Z1-Z2",obs:"Foco na respiração ritmada"},
+    {dia:"Quinta",tipo:"🟡 Intervalado",km:"6 km",pace:"6:00/km tiros",tempo:"42 min",zona:"Z3-Z4",obs:"4x800m c/ 2min caminhada entre"},
+    {dia:"Sábado",tipo:"🔴 Longão",km:"11 km",pace:"6:40/km",tempo:"1h14",zona:"Z2",obs:"Beba água a cada 20 min"},
+    {dia:"Dom",tipo:"🟣 Descanso Ativo",km:"—",pace:"—",tempo:"30 min",zona:"Z1",obs:"Yoga ou mobilidade"},
+  ]},
+  {sem:3,fase:"Base Aeróbica",treinos:[
+    {dia:"Terça",tipo:"🟢 Rodagem Leve",km:"6 km",pace:"6:35/km",tempo:"40 min",zona:"Z1-Z2",obs:"Adicione strides ao final (4x20s)"},
+    {dia:"Quinta",tipo:"🔵 Progressiva",km:"7 km",pace:"6:25→6:05/km",tempo:"44 min",zona:"Z2-Z3",obs:"Divide em 3 blocos de intensidade"},
+    {dia:"Sábado",tipo:"🔴 Longão",km:"12 km",pace:"6:40/km",tempo:"1h20",zona:"Z2",obs:"Seu atual máximo! Bom trabalho 💪"},
+    {dia:"Dom",tipo:"🟣 Descanso Ativo",km:"—",pace:"—",tempo:"30 min",zona:"Z1",obs:"Rolo de foam roller / massagem"},
+  ]},
+  {sem:4,fase:"Base Aeróbica",treinos:[
+    {dia:"Terça",tipo:"🟢 Rodagem Leve",km:"5 km",pace:"6:45/km",tempo:"34 min",zona:"Z1",obs:"SEMANA DE RECUPERAÇÃO — ritmo leve"},
+    {dia:"Quinta",tipo:"🟢 Rodagem Leve",km:"6 km",pace:"6:40/km",tempo:"40 min",zona:"Z1-Z2",obs:"Sem pressão, restauração muscular"},
+    {dia:"Sábado",tipo:"🔴 Longão",km:"10 km",pace:"6:50/km",tempo:"1h08",zona:"Z2",obs:"Volume reduzido — absorção de ganhos"},
+    {dia:"Dom",tipo:"🟣 Descanso Ativo",km:"—",pace:"—",tempo:"40 min",zona:"Z1",obs:"Caminhada + alongamento completo"},
+  ]},
+  {sem:5,fase:"Aumento de Volume",treinos:[
+    {dia:"Terça",tipo:"🟢 Rodagem Leve",km:"7 km",pace:"6:30/km",tempo:"46 min",zona:"Z2",obs:"Mantém ritmo sustentável"},
+    {dia:"Quinta",tipo:"🟡 Intervalado",km:"7 km",pace:"5:50/km tiros",tempo:"48 min",zona:"Z4",obs:"5x800m — foco na forma"},
+    {dia:"Sábado",tipo:"🔴 Longão",km:"14 km",pace:"6:40/km",tempo:"1h34",zona:"Z2",obs:"Primeira vez acima de 12km! 🎉"},
+    {dia:"Dom",tipo:"🟣 Descanso Ativo",km:"—",pace:"—",tempo:"30 min",zona:"Z1",obs:"Recuperação ativa"},
+  ]},
+  {sem:6,fase:"Aumento de Volume",treinos:[
+    {dia:"Terça",tipo:"🔵 Progressiva",km:"7 km",pace:"6:20→5:55/km",tempo:"44 min",zona:"Z2-Z3",obs:"Termina em ritmo de prova"},
+    {dia:"Quinta",tipo:"🟡 Intervalado",km:"8 km",pace:"5:45/km tiros",tempo:"52 min",zona:"Z4",obs:"6x800m ou 3x1600m"},
+    {dia:"Sábado",tipo:"🔴 Longão",km:"14 km",pace:"6:35/km",tempo:"1h32",zona:"Z2",obs:"Tente completar sem parar"},
+    {dia:"Dom",tipo:"🟣 Descanso Ativo",km:"—",pace:"—",tempo:"30 min",zona:"Z1",obs:"Banho frio + mobilidade"},
+  ]},
+  {sem:7,fase:"Aumento de Volume",treinos:[
+    {dia:"Terça",tipo:"🟢 Rodagem Leve",km:"7 km",pace:"6:30/km",tempo:"46 min",zona:"Z2",obs:"Leve e confortável"},
+    {dia:"Quinta",tipo:"🔵 Progressiva",km:"8 km",pace:"6:15→5:55/km",tempo:"49 min",zona:"Z2-Z3",obs:"2km aquec + 4km meta + 2km forte"},
+    {dia:"Sábado",tipo:"🔴 Longão",km:"16 km",pace:"6:40/km",tempo:"1h47",zona:"Z2",obs:"Hidratação a cada 15-20min"},
+    {dia:"Dom",tipo:"🟣 Descanso Ativo",km:"—",pace:"—",tempo:"30 min",zona:"Z1",obs:"Descanso completo se necessário"},
+  ]},
+  {sem:8,fase:"Aumento de Volume",treinos:[
+    {dia:"Terça",tipo:"🟢 Rodagem Leve",km:"5 km",pace:"6:40/km",tempo:"33 min",zona:"Z1",obs:"SEMANA DE RECUPERAÇÃO"},
+    {dia:"Quinta",tipo:"🟢 Rodagem Leve",km:"6 km",pace:"6:40/km",tempo:"40 min",zona:"Z1-Z2",obs:"Corpo assimilando treinos"},
+    {dia:"Sábado",tipo:"🔴 Longão",km:"12 km",pace:"6:50/km",tempo:"1h22",zona:"Z2",obs:"Volume reduzido — recuperação"},
+    {dia:"Dom",tipo:"🟣 Descanso Ativo",km:"—",pace:"—",tempo:"40 min",zona:"Z1",obs:"Massagem + foam roller"},
+  ]},
+  {sem:9,fase:"Fase Específica",treinos:[
+    {dia:"Terça",tipo:"🟡 Intervalado",km:"8 km",pace:"5:40/km tiros",tempo:"52 min",zona:"Z4",obs:"Tiros de 1km com 90s recuperação"},
+    {dia:"Quinta",tipo:"🔵 Progressiva",km:"8 km",pace:"6:15→5:55/km",tempo:"49 min",zona:"Z2-Z3",obs:"Foco em manter pace meta"},
+    {dia:"Sábado",tipo:"🔴 Longão",km:"17 km",pace:"6:35/km",tempo:"1h52",zona:"Z2",obs:"Maior treino até agora — celebre! 🌸"},
+    {dia:"Dom",tipo:"🟣 Descanso Ativo",km:"—",pace:"—",tempo:"30 min",zona:"Z1",obs:"Recuperação prioritária"},
+  ]},
+  {sem:10,fase:"Fase Específica",treinos:[
+    {dia:"Terça",tipo:"🟢 Rodagem Leve",km:"7 km",pace:"6:25/km",tempo:"45 min",zona:"Z2",obs:"Adiciona 4 strides ao final"},
+    {dia:"Quinta",tipo:"🟡 Intervalado",km:"9 km",pace:"5:45/km tiros",tempo:"58 min",zona:"Z3-Z4",obs:"3x2km em pace de prova"},
+    {dia:"Sábado",tipo:"🔴 Longão",km:"18 km",pace:"6:35/km",tempo:"1h59",zona:"Z2",obs:"Testa gel/alimentação igual à prova"},
+    {dia:"Dom",tipo:"🟣 Descanso Ativo",km:"—",pace:"—",tempo:"30 min",zona:"Z1",obs:"Relaxamento muscular"},
+  ]},
+  {sem:11,fase:"Fase Específica",treinos:[
+    {dia:"Terça",tipo:"🔵 Progressiva",km:"8 km",pace:"6:20→6:00/km",tempo:"49 min",zona:"Z2-Z3",obs:"Últimos 3km em pace meta"},
+    {dia:"Quinta",tipo:"🟡 Intervalado",km:"9 km",pace:"5:40/km tiros",tempo:"57 min",zona:"Z4",obs:"4x1200m — VO2max"},
+    {dia:"Sábado",tipo:"🔴 Longão",km:"19 km",pace:"6:35/km",tempo:"2h05",zona:"Z2",obs:"Quase 21km! Crê na sua capacidade 💗"},
+    {dia:"Dom",tipo:"🟣 Descanso Ativo",km:"—",pace:"—",tempo:"40 min",zona:"Z1",obs:"Sono e hidratação são treinos também"},
+  ]},
+  {sem:12,fase:"Fase Específica",treinos:[
+    {dia:"Terça",tipo:"🟢 Rodagem Leve",km:"6 km",pace:"6:40/km",tempo:"40 min",zona:"Z1",obs:"RECUPERAÇÃO — ritmo passeio"},
+    {dia:"Quinta",tipo:"🟢 Rodagem Leve",km:"7 km",pace:"6:35/km",tempo:"46 min",zona:"Z1-Z2",obs:"Consolida adaptações"},
+    {dia:"Sábado",tipo:"🔴 Longão",km:"14 km",pace:"6:40/km",tempo:"1h34",zona:"Z2",obs:"Volume reduzido — supercompensação"},
+    {dia:"Dom",tipo:"🟣 Descanso Ativo",km:"—",pace:"—",tempo:"40 min",zona:"Z1",obs:"Cuide dos seus pés e quadril"},
+  ]},
+  {sem:13,fase:"Afunilamento",treinos:[
+    {dia:"Terça",tipo:"🔵 Progressiva",km:"8 km",pace:"6:15→5:55/km",tempo:"49 min",zona:"Z2-Z3",obs:"Consolida ritmo de prova"},
+    {dia:"Quinta",tipo:"🟡 Intervalado",km:"8 km",pace:"5:35/km tiros",tempo:"50 min",zona:"Z4",obs:"3x1600m — foco total na forma"},
+    {dia:"Sábado",tipo:"🔴 Longão",km:"19 km",pace:"6:30/km",tempo:"2h04",zona:"Z2",obs:"Último longão pesado — dá tudo!"},
+    {dia:"Dom",tipo:"🟣 Descanso Ativo",km:"—",pace:"—",tempo:"30 min",zona:"Z1",obs:"Recuperação total"},
+  ]},
+  {sem:14,fase:"Afunilamento",treinos:[
+    {dia:"Terça",tipo:"🟢 Rodagem Leve",km:"7 km",pace:"6:30/km",tempo:"46 min",zona:"Z2",obs:"Início do Taper — volume cai 25%"},
+    {dia:"Quinta",tipo:"🟡 Intervalado",km:"6 km",pace:"5:40/km tiros",tempo:"38 min",zona:"Z3-Z4",obs:"Tiros curtos, mantém agilidade"},
+    {dia:"Sábado",tipo:"🔴 Longão",km:"16 km",pace:"6:35/km",tempo:"1h45",zona:"Z2",obs:"Volume reduzido, ritmo mantido"},
+    {dia:"Dom",tipo:"🟣 Descanso Ativo",km:"—",pace:"—",tempo:"30 min",zona:"Z1",obs:"Massagem se possível"},
+  ]},
+  {sem:15,fase:"Afunilamento",treinos:[
+    {dia:"Terça",tipo:"🔵 Progressiva",km:"6 km",pace:"6:20→6:00/km",tempo:"37 min",zona:"Z2",obs:"Mantém estímulo sem acumular fadiga"},
+    {dia:"Quinta",tipo:"🟡 Intervalado",km:"5 km",pace:"5:45/km tiros",tempo:"32 min",zona:"Z3",obs:"3x1km — sensação de leveza"},
+    {dia:"Sábado",tipo:"🔴 Longão",km:"12 km",pace:"6:40/km",tempo:"1h20",zona:"Z2",obs:"Último longão leve — confia no processo"},
+    {dia:"Dom",tipo:"🟣 Descanso Ativo",km:"—",pace:"—",tempo:"30 min",zona:"Z1",obs:"Cuide da alimentação e sono"},
+  ]},
+  {sem:16,fase:"Semana da Prova",treinos:[
+    {dia:"Terça",tipo:"🟢 Rodagem Leve",km:"5 km",pace:"6:30/km",tempo:"33 min",zona:"Z2",obs:"Leve e soltinha — acorde as pernas"},
+    {dia:"Quinta",tipo:"🩵 Strides",km:"3 km",pace:"Varie",tempo:"20 min",zona:"Z2-Z3",obs:"4x20s acelerações + trote. Sentiu? 🌸"},
+    {dia:"Sábado",tipo:"🟣 Descanso Ativo",km:"—",pace:"—",tempo:"20 min",zona:"Z1",obs:"Alongamento + visualização da prova"},
+    {dia:"Dom",tipo:"🏁 PROVA 21km",km:"21 km",pace:"6:15/km",tempo:"2h12",zona:"Z2-Z3",obs:"Vai com tudo! Você está pronta! 🎉🏅"},
+  ]},
+];
+
+const FASE_CLASS = {
+  "Base Aeróbica":"fase-base",
+  "Aumento de Volume":"fase-volume",
+  "Fase Específica":"fase-especifica",
+  "Afunilamento":"fase-afunilamento",
+  "Semana da Prova":"fase-prova"
+};
+
+const FASE_SEMS = {
+  "Base Aeróbica":"Sem. 1–4","Aumento de Volume":"Sem. 5–8",
+  "Fase Específica":"Sem. 9–12","Afunilamento":"Sem. 13–15","Semana da Prova":"Sem. 16"
+};
+
+// ════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════
+let currentSem = 1;
+let currentResumoSem = 1;
+let registros = JSON.parse(localStorage.getItem('registros') || '[]');
+let stravaToken = localStorage.getItem('stravaToken') || null;
+let stravaAthlete = JSON.parse(localStorage.getItem('stravaAthlete') || 'null');
+
+// ════════════════════════════════════════════
+// UTILS
+// ════════════════════════════════════════════
+function kmNum(s){ const m = s.match(/(\d+)/); return m ? +m[1] : 0; }
+
+function kmSemana(sem){
+  return PLANO[sem-1].treinos.reduce((a,t) => a + kmNum(t.km), 0);
+}
+
+// Início do plano: primeira corrida registrada = 02/mai/2025
+// Semana começa na quinta (dia mais antigo da semana 1 no plano)
+const PLANO_START = new Date('2026-05-04'); // Segunda-feira, início da semana 1
+
+function getSemanaFromDate(dateStr){
+  const d = new Date(dateStr.split('T')[0]);
+  const start = new Date(PLANO_START);
+  const diffDays = Math.floor((d - start) / 86400000);
+  if(diffDays < 0) return null;
+  const sem = Math.floor(diffDays / 7) + 1;
+  return sem >= 1 && sem <= 16 ? sem : null;
+}
+
+// Cache de runs por semana para ordenar por data dentro da semana
+let _runCountBySem = {};
+
+function matchTreinoPorData(dateStr){
+  const sem = getSemanaFromDate(dateStr);
+  if(!sem) return null;
+  // Conta quantas runs já mapeamos nessa semana para pegar o treino na ordem certa
+  if(!_runCountBySem[sem]) _runCountBySem[sem] = 0;
+  const s = PLANO[sem-1];
+  const treinosRun = s.treinos.filter(t => !t.tipo.includes('🟣'));
+  const idx = Math.min(_runCountBySem[sem], treinosRun.length - 1);
+  _runCountBySem[sem]++;
+  const treino = treinosRun[idx];
+  return treino
+    ? { sem, tipo: treino.tipo, meta: kmNum(treino.km), dia: treino.dia, kmMeta: treino.km, pace: treino.pace, tempo: treino.tempo }
+    : null;
+}
+
+function diasParaNovembro(){
+  const hoje = new Date();
+  const prova = new Date(hoje.getFullYear(), 10, 1); // Nov 1
+  if(prova < hoje) prova.setFullYear(prova.getFullYear()+1);
+  return Math.ceil((prova - hoje) / 86400000);
+}
+
+// ════════════════════════════════════════════
+// NAV
+// ════════════════════════════════════════════
+function showSection(id, btn){
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(btn) btn.classList.add('active');
+  if(window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
+}
+
+function toggleMenu(){
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ════════════════════════════════════════════
+// PROGRESSO
+// ════════════════════════════════════════════
+function initProgresso(){
+  const s = PLANO[0];
+  document.getElementById('m-sem').textContent = '1';
+  document.getElementById('m-fase').textContent = s.fase;
+  document.getElementById('m-fase-sub').textContent = FASE_SEMS[s.fase];
+  document.getElementById('m-km').textContent = kmSemana(1);
+  document.getElementById('m-treinos').textContent = s.treinos.filter(t=>!t.tipo.includes('🟣')).length;
+  document.getElementById('prog-label').textContent = 'Semana 1 de 16';
+  document.getElementById('prog-pct').textContent = '6%';
+  document.getElementById('prog-bar').style.width = '6%';
+  document.getElementById('dias-restantes').textContent = diasParaNovembro();
+
+  document.getElementById('mini-week-list').innerHTML = s.treinos.filter(t=>!t.tipo.includes('🟣')).map(t => `
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:12px;color:var(--text-muted);min-width:50px;font-weight:500">${t.dia}</span>
+      <span style="font-size:14px;flex:1">${t.tipo}</span>
+      <span class="chip chip-km">${t.km}</span>
+      <span class="chip chip-pace">${t.pace}</span>
+    </div>
+  `).join('') + `<div style="padding-top:10px;font-size:12px;color:var(--text-muted)">Dom · 🟣 Descanso Ativo — ${s.treinos[3].obs}</div>`;
+}
+
+// ════════════════════════════════════════════
+// PLANO
+// ════════════════════════════════════════════
+function buildSelects(){
+  const opts = PLANO.map(s => `<option value="${s.sem}">Semana ${s.sem} — ${s.fase}</option>`).join('');
+  document.getElementById('sem-select').innerHTML = opts;
+  document.getElementById('resumo-select').innerHTML = opts;
+
+  const trOpts = PLANO.flatMap(s =>
+    s.treinos.filter(t => !t.tipo.includes('🟣')).map(t =>
+      `<option>Sem ${s.sem} · ${t.dia} · ${t.tipo} (${t.km})</option>`
+    )
+  ).join('');
+  document.getElementById('sel-treino').innerHTML = trOpts;
+}
+
+function renderSem(sem){
+  currentSem = sem;
+  document.getElementById('sem-select').value = sem;
+  const s = PLANO[sem-1];
+  const fc = FASE_CLASS[s.fase] || 'fase-base';
+  document.getElementById('fase-badge').innerHTML = `<span class="fase-pill ${fc}">${s.fase} · Semana ${sem} · ${kmSemana(sem)}km planejados</span>`;
+
+  document.getElementById('treinos-list').innerHTML = s.treinos.map(t => {
+    const isDescanso = t.tipo.includes('🟣');
+    const isProva = t.tipo.includes('🏁');
+    let cls = 'treino-item';
+    if(isDescanso) cls += ' descanso';
+    if(isProva) cls += ' prova';
+    return `<div class="${cls}">
+      <div class="treino-header">
+        <span class="treino-dia">${t.dia}</span>
+        <span style="font-size:18px">${isProva?'🏁':isDescanso?'🧘‍♀️':'🎯'}</span>
+      </div>
+      <div class="treino-tipo">${t.tipo}</div>
+      <div class="chips">
+        <span class="chip chip-km">${t.km}</span>
+        ${t.pace !== '—' ? `<span class="chip chip-pace">${t.pace}</span>` : ''}
+        <span class="chip chip-time">${t.tempo}</span>
+        <span class="chip chip-zona">${t.zona}</span>
+      </div>
+      <div class="treino-obs">💡 ${t.obs}</div>
+    </div>`;
+  }).join('');
+}
+
+function navSem(dir){
+  const n = currentSem + dir;
+  if(n >= 1 && n <= 16) renderSem(n);
+}
+
+// ════════════════════════════════════════════
+// UPLOAD / REGISTRO
+// ════════════════════════════════════════════
+// salvarTreino moved to Supabase section
+
+function renderRegistros(){
+  const el = document.getElementById('registros-wrap');
+  if(!registros.length){ el.innerHTML = ''; return; }
+  el.innerHTML = `<div style="font-size:15px;font-weight:500;color:var(--text);margin-bottom:12px">✅ Treinos registrados (${registros.length})</div>` +
+    [...registros].reverse().map((r,i) => `
+      <div class="registro-item">
+        <span class="registro-check">✅</span>
+        <div class="registro-info">
+          <div class="registro-name">${r.treino}</div>
+          <div class="registro-meta">${r.data} · ${r.km}km · ${r.tempo}min${r.pace?' · '+r.pace:''} ${r.fonte==='strava'?'· via Strava 🟠':''}</div>
+          ${r.obs?`<div style="font-size:11px;color:var(--text-faint);margin-top:2px;font-style:italic">${r.obs}</div>`:''}
+        </div>
+      </div>
+    `).join('');
+}
+
+// ════════════════════════════════════════════
+// RESUMO
+// ════════════════════════════════════════════
+function renderResumo(sem){
+  currentResumoSem = sem;
+  document.getElementById('resumo-select').value = sem;
+  const s = PLANO[sem-1];
+  const kmMeta = kmSemana(sem);
+  const regs = registros.filter(r => r.treino.includes(`Sem ${sem}`));
+  const kmReal = +regs.reduce((a,r) => a + (r.km||0), 0).toFixed(1);
+  const trMeta = s.treinos.filter(t => !t.tipo.includes('🟣')).length;
+  const trReal = regs.length;
+  const pctKm = kmMeta ? Math.min(100, Math.round(kmReal/kmMeta*100)) : 0;
+  const pctTr = trMeta ? Math.min(100, Math.round(trReal/trMeta*100)) : 0;
+  const deltaKm = +(kmReal - kmMeta).toFixed(1);
+  const deltaTr = trReal - trMeta;
+
+  let insight = '';
+  const fc = FASE_CLASS[s.fase] || 'fase-base';
+  if(!regs.length) insight = 'Nenhum treino registrado ainda nesta semana. Registre seus resultados na aba "Subir treino" para ver a análise completa! 💪';
+  else if(pctKm >= 100 && pctTr >= trMeta) insight = '🎉 Semana completa! Você bateu todas as metas. Descanse bem e hidrate-se — o corpo cresce no descanso! 💗';
+  else if(pctKm < 70) insight = `📉 Ficou ${Math.abs(deltaKm)}km abaixo da meta de volume. Não compense tudo de uma vez — aumente gradualmente nas próximas semanas.`;
+  else if(trReal < trMeta) insight = `⚠️ ${trReal} de ${trMeta} treinos feitos. Tente encaixar os treinos faltantes na próxima semana, mas respeite seu corpo!`;
+  else insight = `✅ Ótima semana! ${trReal} treinos feitos e ${kmReal}km percorridos. Continue assim! 🌸`;
+
+  document.getElementById('resumo-content').innerHTML = `
+    <div class="card" style="margin-bottom:1rem">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+        <div style="font-size:15px;font-weight:500">Semana ${sem} — ${s.fase}</div>
+        <span class="fase-pill ${fc}" style="margin:0">${kmMeta}km planejados</span>
+      </div>
+      <div class="gap-row">
+        <span class="gap-lbl">Volume</span>
+        <div class="gap-bar-wrap">
+          <div class="gap-bar-target"></div>
+          <div class="gap-bar-real ${kmReal>=kmMeta?'gap-over':'gap-under'}" style="width:${pctKm}%"></div>
+        </div>
+        <span class="gap-vals">${kmReal}/${kmMeta}km</span>
+        <span class="gap-delta ${deltaKm>=0?'delta-pos':'delta-neg'}">${deltaKm>=0?'+':''}${deltaKm}km</span>
+      </div>
+      <div class="gap-row">
+        <span class="gap-lbl">Treinos</span>
+        <div class="gap-bar-wrap">
+          <div class="gap-bar-target"></div>
+          <div class="gap-bar-real ${trReal>=trMeta?'gap-over':'gap-under'}" style="width:${pctTr}%"></div>
+        </div>
+        <span class="gap-vals">${trReal}/${trMeta}</span>
+        <span class="gap-delta ${deltaTr>=0?'delta-pos':'delta-neg'}">${deltaTr>=0?'+':''}${deltaTr}</span>
+      </div>
+    </div>
+    <div class="insight">
+      <span class="insight-icon">💡</span>
+      <div class="insight-text">${insight}</div>
+    </div>
+  `;
+}
+
+function navSemResumo(dir){
+  const n = currentResumoSem + dir;
+  if(n >= 1 && n <= 16) renderResumo(n);
+}
+
+// ════════════════════════════════════════════
+// STRAVA
+// ════════════════════════════════════════════
+const CLIENT_ID = '237245';
+const CLIENT_SECRET = '32b74f989d90826c1a236ad8bca648cb9fbb9a65';
+
+function stravaState(state){
+  ['disconnected','loading','connected','error'].forEach(s => {
+    document.getElementById('strava-'+s).style.display = s === state ? 'block' : 'none';
+  });
+}
+
+async function trocarCodigo(){
+  const code = document.getElementById('auth-code').value.trim();
+  if(!code){ alert('Cole o código primeiro.'); return; }
+  stravaState('loading');
+  try {
+    const res = await fetch('https://corsproxy.io/?' + encodeURIComponent('https://www.strava.com/oauth/token'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ client_id: CLIENT_ID, client_secret: CLIENT_SECRET, code, grant_type: 'authorization_code' })
+    });
+    const data = await res.json();
+    if(data.access_token){
+      stravaToken = data.access_token;
+      stravaAthlete = data.athlete;
+      localStorage.setItem('stravaToken', stravaToken);
+      localStorage.setItem('stravaAthlete', JSON.stringify(stravaAthlete));
+      updateStravaUI();
+      buscarAtividades();
+    } else {
+      throw new Error(data.message || 'Código inválido ou expirado');
+    }
+  } catch(e){
+    document.getElementById('strava-error-msg').textContent = e.message;
+    stravaState('error');
+  }
+}
+
+function updateStravaUI(){
+  if(stravaToken && stravaAthlete){
+    stravaState('connected');
+    const a = stravaAthlete;
+    document.getElementById('athlete-name').textContent = `${a.firstname} ${a.lastname}${a.city?' · '+a.city:''}`;
+    document.getElementById('sidebar-strava-label').textContent = `${a.firstname} conectada`;
+    document.getElementById('sidebar-strava-btn').classList.add('connected');
+  } else {
+    stravaState('disconnected');
+    document.getElementById('sidebar-strava-label').textContent = 'Conectar Strava';
+    document.getElementById('sidebar-strava-btn').classList.remove('connected');
+  }
+}
+
+async function buscarAtividades(){
+  if(!stravaToken) return;
+  const el = document.getElementById('activities-list');
+  _runCountBySem = {}; // reset para recontagem correta por semana
+  el.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:13px">Buscando suas corridas...</div>';
+  try {
+    const res = await fetch('https://www.strava.com/api/v3/athlete/activities?per_page=15', {
+      headers: { Authorization: `Bearer ${stravaToken}` }
+    });
+    if(res.status === 401){ desconectar(); return; }
+    const acts = await res.json();
+    const runs = acts.filter(a => a.type === 'Run' || a.sport_type === 'Run');
+    if(!runs.length){
+      el.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--text-muted);font-size:14px">🏃‍♀️ Nenhuma corrida encontrada ainda.<br><span style="font-size:12px">Sincronize seu Apple Watch com o Strava e volte aqui!</span></div>';
+      return;
+    }
+    el.innerHTML = runs.slice(0,10).map(a => {
+      const km = a.distance / 1000;
+      const kmStr = km.toFixed(2);
+      const minTot = Math.floor(a.moving_time / 60);
+      const h = Math.floor(minTot / 60);
+      const m = minTot % 60;
+      const tempo = h > 0 ? `${h}h${m.toString().padStart(2,'0')}` : `${m}min`;
+      const paceSegs = a.moving_time / (a.distance / 1000);
+      const pm = Math.floor(paceSegs / 60);
+      const ps = Math.round(paceSegs % 60);
+      const pace = `${pm}:${ps.toString().padStart(2,'0')}/km`;
+      const dataStr = new Date(a.start_date_local).toLocaleDateString('pt-BR', {day:'2-digit',month:'short',year:'numeric'});
+      const elev = a.total_elevation_gain ? ` · ${Math.round(a.total_elevation_gain)}m ↑` : '';
+      const match = matchTreinoPorData(a.start_date_local);
+      const jaRegistrado = registros.some(r => r.stravaId === a.id);
+      const regBtn = !jaRegistrado && match
+        ? `<button onclick="registrarDoStrava(${a.id},'${a.name.replace(/'/g,"\\'")}',${km},'${pace}',${Math.floor(a.moving_time/60)},${match.sem},'${match.tipo.replace(/[🟢🔵🟡🔴🟣🩵🏁]/g,'')}','${match.dia}')" style="margin-top:6px;padding:3px 10px;border-radius:99px;border:1px solid var(--pink);background:transparent;color:var(--pink);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif">+ Registrar no plano</button>`
+        : jaRegistrado ? `<span style="font-size:10px;color:var(--green);margin-top:4px;display:inline-block">✓ Registrado</span>` : '';
+      return `<div class="activity-item">
+        <span class="activity-run-icon">🏃‍♀️</span>
+        <div class="activity-info">
+          <div class="activity-name">${a.name}</div>
+          <div class="activity-meta">${dataStr} · ${kmStr}km · ${tempo} · ${pace}${elev}</div>
+          ${match ? `<div><span class="match-pill">✓ Sem ${match.sem} · ${match.tipo} · meta ${match.kmMeta}</span></div>` : `<span class="no-match-pill">Fora do plano</span>`}
+          ${regBtn}
+        </div>
+        <span class="km-badge">${kmStr}km</span>
+      </div>`;
+    }).join('');
+  } catch(e){
+    el.innerHTML = `<div style="color:var(--pink);font-size:13px;padding:1rem">Erro: ${e.message}</div>`;
+  }
+}
+
+// registrarDoStrava moved to Supabase section
+
+function desconectar(){
+  stravaToken = null; stravaAthlete = null;
+  localStorage.removeItem('stravaToken');
+  localStorage.removeItem('stravaAthlete');
+  updateStravaUI();
+}
+
+// ════════════════════════════════════════════
+// SUPABASE
+// ════════════════════════════════════════════
+const SUPA_URL = 'https://vpkubycxupyuhsgcggko.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZwa3VieWN4dXB5dWhzZ2NnZ2tvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxNzM5NDcsImV4cCI6MjA5Mzc0OTk0N30.LuG6Nf3XWYhWBvczbaYKHSRExLyb7hpauPriGX2gX5k';
+const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+let currentUser = null;
+let authTab = 'login';
+
+function switchTab(tab){
+  authTab = tab;
+  document.getElementById('tab-login').style.background = tab==='login' ? 'var(--pink)' : 'transparent';
+  document.getElementById('tab-login').style.color = tab==='login' ? 'white' : 'var(--text-muted)';
+  document.getElementById('tab-signup').style.background = tab==='signup' ? 'var(--pink)' : 'transparent';
+  document.getElementById('tab-signup').style.color = tab==='signup' ? 'white' : 'var(--text-muted)';
+  document.getElementById('auth-btn').textContent = tab==='login' ? 'Entrar' : 'Criar conta';
+  document.getElementById('login-msg').style.display = 'none';
+}
+
+function showLoginMsg(msg, ok){
+  const el = document.getElementById('login-msg');
+  el.textContent = msg;
+  el.style.display = 'block';
+  el.style.background = ok ? 'var(--green-light)' : 'var(--pink-light)';
+  el.style.color = ok ? 'var(--green)' : 'var(--pink-dark)';
+}
+
+async function authAction(){
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+  if(!email || !password){ showLoginMsg('Preencha email e senha.', false); return; }
+  const btn = document.getElementById('auth-btn');
+  btn.textContent = '...'; btn.disabled = true;
+  try {
+    let result;
+    if(authTab === 'login'){
+      result = await supa.auth.signInWithPassword({ email, password });
+    } else {
+      result = await supa.auth.signUp({ email, password });
+      if(!result.error) { showLoginMsg('Conta criada! Verifique seu email para confirmar.', true); btn.textContent='Criar conta'; btn.disabled=false; return; }
+    }
+    if(result.error) throw result.error;
+  } catch(e){
+    showLoginMsg(e.message === 'Invalid login credentials' ? 'Email ou senha incorretos.' : e.message, false);
+    btn.textContent = authTab==='login'?'Entrar':'Criar conta';
+    btn.disabled = false;
+  }
+}
+
+async function logout(){
+  await supa.auth.signOut();
+  currentUser = null;
+  registros = [];
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('user-info').style.display = 'none';
+}
+
+async function carregarRegistros(){
+  if(!currentUser) return;
+  const { data } = await supa.from('registros').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
+  if(data) {
+    registros = data.map(r => ({
+      ...r, stravaId: r.strava_id
+    }));
+    renderRegistros();
+    renderResumo(currentResumoSem);
+  }
+}
+
+async function salvarRegistroSupa(reg){
+  if(!currentUser) return;
+  const { data, error } = await supa.from('registros').insert({
+    user_id: currentUser.id,
+    strava_id: reg.stravaId || null,
+    treino: reg.treino,
+    km: reg.km,
+    tempo: reg.tempo,
+    pace: reg.pace,
+    obs: reg.obs,
+    data: reg.data,
+    fonte: reg.fonte
+  }).select().single();
+  if(data) registros.unshift({ ...data, stravaId: data.strava_id });
+  renderRegistros();
+  renderResumo(currentResumoSem);
+}
+
+// ════════════════════════════════════════════
+// OVERRIDE salvarTreino e registrarDoStrava
+// ════════════════════════════════════════════
+async function salvarTreino(){
+  const treino = document.getElementById('sel-treino').value;
+  const km = document.getElementById('inp-km').value;
+  const tempo = document.getElementById('inp-tempo').value;
+  const pace = document.getElementById('inp-pace').value;
+  const obs = document.getElementById('inp-obs').value;
+  if(!km || !tempo){ alert('Preencha a distância e o tempo.'); return; }
+  const reg = { treino, km: +km, tempo: +tempo, pace, obs, data: new Date().toLocaleDateString('pt-BR'), fonte: 'manual' };
+  await salvarRegistroSupa(reg);
+  document.getElementById('inp-km').value = '';
+  document.getElementById('inp-tempo').value = '';
+  document.getElementById('inp-pace').value = '';
+  document.getElementById('inp-obs').value = '';
+}
+
+async function registrarDoStrava(id, nome, km, pace, tempo, sem, tipo, dia){
+  if(registros.some(r => r.stravaId === id || r.strava_id === id)) return;
+  const reg = {
+    stravaId: id,
+    treino: `Sem ${sem} · ${dia} · ${tipo.trim()}`,
+    km: +parseFloat(km).toFixed(2),
+    tempo,
+    pace,
+    obs: 'Importado do Strava 🟠',
+    data: new Date().toLocaleDateString('pt-BR'),
+    fonte: 'strava'
+  };
+  await salvarRegistroSupa(reg);
+  buscarAtividades();
+}
+
+// ════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════
+buildSelects();
+initProgresso();
+renderSem(1);
+renderResumo(1);
+updateStravaUI();
+
+// Auth state listener
+supa.auth.onAuthStateChange(async (event, session) => {
+  if(session?.user){
+    currentUser = session.user;
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('user-info').style.display = 'block';
+    document.getElementById('user-email-display').textContent = currentUser.email;
+    await carregarRegistros();
+    if(stravaToken) buscarAtividades();
+  } else {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('user-info').style.display = 'none';
+  }
+});
+</script>
+</body>
+</html>
