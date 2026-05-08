@@ -1237,6 +1237,19 @@ renderSem(1);
 renderResumo(1);
 updateStravaUI();
 
+// Auto-capture Strava code from URL after redirect
+(function(){
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get('code');
+  const scope = params.get('scope');
+  if(code && scope && scope.includes('activity')){
+    // Store code to use after login
+    sessionStorage.setItem('stravaCode', code);
+    // Clean URL
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+})();
+
 // Auth state listener
 supa.auth.onAuthStateChange(async (event, session) => {
   if(session?.user){
@@ -1246,6 +1259,15 @@ supa.auth.onAuthStateChange(async (event, session) => {
     document.getElementById('user-email-display').textContent = currentUser.email;
     await carregarRegistros();
     if(stravaToken) buscarAtividades();
+    // Auto-process strava code if returning from OAuth
+    const pendingCode = sessionStorage.getItem('stravaCode');
+    if(pendingCode && !stravaToken){
+      sessionStorage.removeItem('stravaCode');
+      document.getElementById('auth-code').value = pendingCode;
+      // Switch to strava section and auto-connect
+      showSection('strava', document.querySelectorAll('.nav-item')[4]);
+      trocarCodigo();
+    }
   } else {
     document.getElementById('login-screen').style.display = 'flex';
     document.getElementById('user-info').style.display = 'none';
